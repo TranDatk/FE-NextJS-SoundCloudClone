@@ -18,7 +18,7 @@ const ProfilePage = async ({ params }: { params: { slug: string } }) => {
         }
     })
 
-    const data = res?.results ?? []
+    const data = res?.data ?? []
 
     return (
         <Container sx={{ my: 5 }}>
