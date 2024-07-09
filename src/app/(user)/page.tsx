@@ -17,11 +17,11 @@ export default async function HomePage() {
   })
 
 
-  // const resChill = await sendRequest<IBackendRes<ITrack[]>>({
-  //   url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/tracks/top/`,
-  //   method: "POST",
-  //   body: { genre: "chill" }
-  // })
+  const resElec = await sendRequest<IBackendRes<ITrack[]>>({
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/top?limit=6`,
+    method: "POST",
+    body: { genre: "Electronic" }
+  })
 
   return (
     <Container>
@@ -31,10 +31,10 @@ export default async function HomePage() {
         title="Top Pop Tracks"
       />
       <Divider />
-      {/* <MainSlider
-        tracks={resChill?.results ?? []}
-        title="Top Chill Tracks"
-      /> */}
+      <MainSlider
+        tracks={resElec?.data ?? []}
+        title="Top Electronic Tracks"
+      />
     </Container>
   );
 }

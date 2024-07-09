@@ -93,7 +93,7 @@ const CommentTrack = (props: IProps) => {
                             `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${track?.user?.avatar}` :
                             "/avatars-000184820148-9xr49w-t240x240.jpg"}
                     />
-                    <h3>{session?.user?.email}</h3>
+                    <h3>{session?.user?.name}</h3>
                 </div>
                 <div className='right' style={{ width: "calc(100% - 200px)" }}>
                     {comments?.map(comment => {

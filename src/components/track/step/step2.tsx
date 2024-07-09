@@ -21,6 +21,7 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image'
 import { sendRequest } from "@/utils/api";
 import { useToast } from "@/utils/toast";
+import { useRouter } from 'next/navigation';
 
 function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
     return (
@@ -91,6 +92,7 @@ interface INewTrack {
 
 const Step2 = (props: IProps) => {
     const toast = useToast();
+    const router = useRouter();
     const { genres, trackUpload, setValue } = props;
     const { data: session } = useSession();
     const [infor, setInfor] = useState<INewTrack>({
@@ -167,7 +169,6 @@ const Step2 = (props: IProps) => {
                     'Authorization': `Bearer ${session?.access_token}`,
                 },
             })
-            console.log(res?.data?.data?.fileName)
             setInfor({
                 ...infor,
                 photo: res?.data?.data?.fileName ?? ''
@@ -220,7 +221,7 @@ const Step2 = (props: IProps) => {
             }
         })
         if (resPop.error) {
-            toast.error("Tạo Track thất bại")
+            toast.error("Tạo Track thất bại");
         } else {
             setValue(0)
             await sendRequest<IBackendRes<any>>({
@@ -229,8 +230,9 @@ const Step2 = (props: IProps) => {
                 queryParams: {
                     tag: "track-by-profile",
                 }
-            })
-            toast.success("Tạo Track thành công")
+            });
+            router.refresh();
+            toast.success("Tạo Track thành công");
         }
     }
 

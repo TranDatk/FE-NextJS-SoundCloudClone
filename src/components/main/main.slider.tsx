@@ -125,7 +125,7 @@ const MainSlider = (props: IProps) => {
                     return (
                         <div className="track" key={track._id}>
                             <Link
-                                href={`/track/${convertSlugUrl(track?.title)}-${track?._id}.html?tag=${track?.genre.name}`}
+                                href={`/track/${convertSlugUrl(track?.title)}-${track?._id}.html`}
                                 style={{ textDecoration: 'none', color: 'inherit' }}>
                                 <img src={`${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${track?.photo}`} alt="track" />
                                 <h4>{track.title}</h4>

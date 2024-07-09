@@ -16,7 +16,7 @@ const ClientSearch = () => {
 
     const fetchData = async (query: string) => {
         const res = await sendRequest<IBackendRes<ITrack[]>>({
-            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/tracks/search/`,
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/search`,
             method: "POST",
             body: {
                 keyword: query

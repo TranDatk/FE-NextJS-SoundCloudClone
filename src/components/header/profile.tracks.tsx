@@ -27,22 +27,43 @@ const ProfileTracks = (props: IProps) => {
 
     return (
         <Card sx={{ display: 'flex', justifyContent: "space-between" }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: '70%', }}>
                 <CardContent sx={{ flex: '1 0 auto' }}>
                     <Link
-                        href={`/track/${convertSlugUrl(data?.title)}-${data?._id}.html?tag=${data?.genre.name}`}
-                        style={{ textDecoration: 'none', color: 'black' }}>
-                        <Typography component="div" variant="h5">
-                            {data.title}
-                        </Typography>
+                        href={`/track/${convertSlugUrl(data?.title)}-${data?._id}.html`}
+                        style={{
+                            textDecoration: 'none',
+                            color: 'black',
+                            display: 'inline-block',
+                            maxWidth: '100%',
+                        }}
+                    >
+                        <div style={{
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            whiteSpace: 'nowrap',
+                            width: '100%',
+                        }}>
+                            <Typography
+                                component="div"
+                                variant="h5"
+                                style={{
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                }}
+                            >
+                                {data?.title}
+                            </Typography>
+                        </div>
                     </Link>
                     <Typography variant="subtitle1" color="text.secondary" component="div">
-                        {data.description}
+                        {data?.description}
                     </Typography>
                 </CardContent>
                 <Box sx={{ display: 'flex', alignItems: 'center', pl: 1, pb: 1 }}>
                     <IconButton aria-label="previous">
-                        {theme.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
+                        {theme?.direction === 'rtl' ? <SkipNextIcon /> : <SkipPreviousIcon />}
                     </IconButton>
                     <IconButton
                         onClick={() => {

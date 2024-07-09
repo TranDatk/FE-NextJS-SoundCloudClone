@@ -1,7 +1,9 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import ProfileTracks from "@/components/header/profile.tracks";
 import { sendRequest } from "@/utils/api";
 import { Container, Grid } from "@mui/material";
 import { Metadata } from "next";
+import { getServerSession } from "next-auth";
 
 export const metadata: Metadata = {
     title: 'Thông tin của bạn',
@@ -9,16 +11,20 @@ export const metadata: Metadata = {
 }
 
 const ProfilePage = async ({ params }: { params: { slug: string } }) => {
-    const res = await sendRequest<IBackendRes<ITrack[]>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/tracks/user/`,
-        method: "post",
-        body: { user_id: `${params.slug}` },
+    const session = await getServerSession(authOptions)
+
+    const res = await sendRequest<IBackendRes<IModelPaginate<ITrack[]>>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/user-track`,
+        method: "get",
+        headers: {
+            Authorization: `Bearer ${session?.access_token}`,
+        },
         nextOption: {
             next: { tags: ['track-by-profile'] }
         }
     })
 
-    const data = res?.data ?? []
+    const data = res?.data?.results ?? []
 
     return (
         <Container sx={{ my: 5 }}>

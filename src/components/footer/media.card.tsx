@@ -51,7 +51,7 @@ export default function MediaControlCard(props: IProp) {
                         {track.title}
                     </Typography>
                     <Typography sx={{ height: 15, fontSize: '0.8rem' }} color="text.secondary">
-                        {track.user.username}
+                        {track?.user?.name}
                     </Typography>
                 </Box>
             </Box>)

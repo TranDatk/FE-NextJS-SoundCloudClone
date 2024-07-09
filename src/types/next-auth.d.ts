@@ -8,6 +8,7 @@ interface IUser {
     last_name: string;
     avatar: string;
     pk: number;
+    name: string;
 }
 
 declare module "next-auth/jwt" {

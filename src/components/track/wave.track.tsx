@@ -183,20 +183,18 @@ const WaveTrack = (props: IProps) => {
     }, [currentTrack])
 
     useEffect(() => {
-        if (track?._id && !currentTrack?._id)
+        if (track?._id && !currentTrack?._id) {
             setCurrentTrack({ ...track, isPlaying: false })
+        }
     }, [track])
 
     const handleIncreaseView = async () => {
         if (session?.access_token && firstTimeOnPage) {
             const res = await sendRequest<IBackendRes<ITrack>>({
-                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/tracks/increase-view/`,
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/increase-view/`,
                 method: "POST",
                 body: {
-                    track_id: track?._id,
-                },
-                headers: {
-                    Authorization: `Bearer ${session?.access_token}`,
+                    trackId: track?._id,
                 },
             })
             if (res?.data) {
