@@ -20,6 +20,7 @@ interface IProps {
     id: string;
     track: ITrack;
     comments: IComment[];
+    isFollow: boolean;
 }
 
 const formatTime = (seconds: number) => {
@@ -344,7 +345,7 @@ const WaveTrack = (props: IProps) => {
                         }
                     </div>
                 </div>
-                <LikeTrack track={track} />
+                <LikeTrack track={track} isFollow={props?.isFollow} />
                 <CommentTrack comments={comments} track={track} wavesurfer={wavesurfer} />
             </div >) :
             (<h1>Page not found</h1>)

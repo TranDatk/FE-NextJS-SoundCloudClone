@@ -40,6 +40,10 @@ declare global {
         createdAt: string;
     }
 
+    interface IFollow {
+        isFollow: boolean;
+    }
+
     interface ILike extends Itembase {
         like: boolean;
         user: IUser;
