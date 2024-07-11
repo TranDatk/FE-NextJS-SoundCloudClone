@@ -250,7 +250,7 @@ export default function AppHeader() {
                                             onClick={handleProfileMenuOpen}
                                             style={{ width: 40, height: 40, borderRadius: "50%" }} />
                                     </> :
-                                    <Link href={"auth/signin"}>Login</Link>
+                                    <Link href={"/auth/signin"}>Login</Link>
                             }
 
                         </Box>
