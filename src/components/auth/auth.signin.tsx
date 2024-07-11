@@ -13,6 +13,8 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { IUser } from "@/types/next-auth";
+import { sendRequest } from "@/utils/api";
 
 const AuthSignIn = (props: any) => {
     const router = useRouter();
@@ -20,15 +22,23 @@ const AuthSignIn = (props: any) => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [username, setUsername] = useState<string>("");
     const [password, setPassword] = useState<string>("");
+    const [rePassword, setRePassword] = useState<string>("");
 
     const [isErrorUsername, setIsErrorUsername] = useState<boolean>(false);
     const [isErrorPassword, setIsErrorPassword] = useState<boolean>(false);
+    const [isErrorRePassword, setIsErrorRePassword] = useState<boolean>(false);
 
     const [errorUsername, setErrorUsername] = useState<string>("");
     const [errorPassword, setErrorPassword] = useState<string>("");
+    const [errorRePassword, setErrorRePassword] = useState<string>("");
 
     const [openMessage, setOpenMessage] = useState<boolean>(false);
     const [resMessage, setResMessage] = useState<string>("");
+
+    const [openSuccessMessage, setOpenSuccessMessage] = useState<boolean>(false);
+    const [resSuccessMessage, setResSuccessMessage] = useState<string>("");
+
+    const [isRegister, setIsRegister] = useState<boolean>(false);
 
     const handleSubmit = async () => {
         setIsErrorUsername(false);
@@ -60,15 +70,61 @@ const AuthSignIn = (props: any) => {
         }
     }
 
+    const handleRegister = async () => {
+        setIsErrorUsername(false);
+        setIsErrorPassword(false);
+        setErrorUsername("");
+        setErrorPassword("");
+
+        if (!username) {
+            setIsErrorUsername(true);
+            setErrorUsername("Email is not empty.")
+            return;
+        }
+        if (!password) {
+            setIsErrorPassword(true);
+            setErrorPassword("Password is not empty.")
+            return;
+        }
+        if (!rePassword) {
+            setIsErrorRePassword(true);
+            setErrorRePassword("Confirm password is not empty.")
+            return;
+        }
+        if (rePassword !== password) {
+            setIsErrorRePassword(true);
+            setErrorRePassword("The confirm passwords you entered don't align")
+            return;
+        }
+
+        const res = await sendRequest<IBackendRes<IUser>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/register`,
+            method: "POST",
+            body: {
+                email: username,
+                password: password,
+                rePassword: rePassword
+            }
+        });
+        if (!res?.error) {
+            setIsRegister(false);
+            setOpenSuccessMessage(true);
+            setResSuccessMessage("Account successfully created");
+        } else {
+            setOpenMessage(true);
+            setResMessage("Mật khẩu hoặc tài khoản không chính xác");
+        }
+    }
+
     return (
         <Box
             sx={{
-                // backgroundImage: "linear-gradient(to bottom, #ff9aef, #fedac1, #d5e1cf, #b7e6d9)",
-                // backgroundColor: "#b7e6d9",
-                // backgroundRepeat: "no-repeat"
+                backgroundImage: "linear-gradient(to bottom, #FFFACD, #fedac1, #d5e1cf, #b7e6d9)",
+                backgroundColor: "white",
+                backgroundRepeat: "no-repeat"
             }}
         >
-            <Grid container
+            {!isRegister && <Grid container
                 sx={{
                     display: "flex",
                     alignItems: "center",
@@ -108,16 +164,30 @@ const AuthSignIn = (props: any) => {
                         </Box>
 
                         <TextField
-                            onChange={(event) => setUsername(event.target.value)}
+                            onChange={
+                                (event) => {
+                                    setUsername(event.target.value);
+                                    if (!event.target.validity.valid) {
+                                        setIsErrorUsername(true);
+                                        setErrorUsername('Please enter a valid email');
+                                    } else {
+                                        setIsErrorUsername(false);
+                                    }
+                                }
+                            }
                             variant="outlined"
                             margin="normal"
                             required
+                            inputProps={{
+                                type: "email",
+                            }}
                             fullWidth
-                            label="Username"
+                            label="Email"
                             name="username"
                             autoFocus
                             error={isErrorUsername}
                             helperText={errorUsername}
+
                         />
                         <TextField
                             onChange={(event) => setPassword(event.target.value)}
@@ -142,7 +212,8 @@ const AuthSignIn = (props: any) => {
                         />
                         <Button
                             sx={{
-                                my: 3
+                                mt: 3,
+                                mb: 2
                             }}
                             type="submit"
                             fullWidth
@@ -151,6 +222,19 @@ const AuthSignIn = (props: any) => {
                             onClick={handleSubmit}
                         >
                             Sign In
+                        </Button>
+                        <Button
+                            sx={{
+                                mb: 3,
+                                backgroundColor: '#42b72a',
+                                color: 'white'
+                            }}
+                            variant="text"
+                            fullWidth
+                            color="primary"
+                            onClick={() => { setIsRegister(true) }}
+                        >
+                            Create new account
                         </Button>
                         <Divider>Or using</Divider>
                         <Box
@@ -184,6 +268,135 @@ const AuthSignIn = (props: any) => {
                     </div>
                 </Grid>
             </Grid>
+            }
+            {isRegister && <Grid container
+                sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    height: "100vh"
+                }}
+            >
+                <Grid
+                    item
+                    xs={12}
+                    sm={8}
+                    md={5}
+                    lg={4}
+                    sx={{
+                        boxShadow: "rgba(100, 100, 111, 0.2) 0px 7px 29px 0px"
+                    }}
+                >
+                    <div style={{ margin: "20px" }}>
+                        <Link
+                            href='#'
+                            onClick={() => { setIsRegister(false) }}
+                            style={{ 'textDecoration': 'none', color: 'inherit', }}
+                        >
+                            <ArrowBackIcon />
+                        </Link>
+                        <Box sx={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                            width: "100%"
+                        }}>
+
+                            <Avatar>
+                                <LockIcon />
+                            </Avatar>
+
+                            <Typography component="h1">
+                                Sign in
+                            </Typography>
+                        </Box>
+
+                        <TextField
+                            onChange={
+                                (event) => {
+                                    setUsername(event.target.value);
+                                    if (!event.target.validity.valid) {
+                                        setIsErrorUsername(true);
+                                        setErrorUsername('Please enter a valid email');
+                                    } else {
+                                        setErrorUsername('');
+                                        setIsErrorUsername(false);
+                                    }
+                                }
+                            }
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            inputProps={{
+                                type: "email",
+                            }}
+                            fullWidth
+                            label="Email"
+                            name="username"
+                            autoFocus
+                            error={isErrorUsername}
+                            helperText={errorUsername}
+                        />
+                        <TextField
+                            onChange={(event) => setPassword(event.target.value)}
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="password"
+                            label="Password"
+                            type={showPassword ? "text" : "password"}
+                            error={isErrorPassword}
+                            helperText={errorPassword}
+                            onKeyDown={(e) => { e.key === "Enter" && handleSubmit() }}
+
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">
+                                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword === false ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>,
+                            }}
+                        />
+                        <TextField
+                            onChange={(event) => setRePassword(event.target.value)}
+                            variant="outlined"
+                            margin="normal"
+                            required
+                            fullWidth
+                            name="rePassword"
+                            label="Confirm Password"
+                            type={showPassword ? "text" : "password"}
+                            error={isErrorRePassword}
+                            helperText={errorRePassword}
+                            onKeyDown={(e) => { e.key === "Enter" && handleRegister() }}
+
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">
+                                    <IconButton onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword === false ? <VisibilityOff /> : <Visibility />}
+                                    </IconButton>
+                                </InputAdornment>,
+                            }}
+                        />
+                        <Button
+                            sx={{
+                                mt: 3,
+                                mb: 2
+                            }}
+                            type="submit"
+                            fullWidth
+                            variant="contained"
+                            color="primary"
+                            onClick={handleRegister}
+                        >
+                            Submit
+                        </Button>
+                    </div>
+                </Grid>
+            </Grid>
+            }
             <Snackbar
                 open={openMessage}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }} >
@@ -194,6 +407,20 @@ const AuthSignIn = (props: any) => {
                     sx={{ width: '100%' }}
                 >
                     {resMessage}
+                </Alert>
+            </Snackbar>
+            <Snackbar
+                open={openSuccessMessage}
+                autoHideDuration={3000}
+                onClose={() => { setOpenSuccessMessage(false) }}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }} >
+                <Alert
+                    onClose={() => { setOpenSuccessMessage(false) }}
+                    severity="success"
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                >
+                    {resSuccessMessage}
                 </Alert>
             </Snackbar>
         </Box>

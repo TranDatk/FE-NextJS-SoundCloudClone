@@ -7,20 +7,22 @@ import Divider from '@mui/material/Divider';
 import HeadBanner from "@/components/banner/head.banner";
 
 export default async function HomePage() {
-
-  const session = await getServerSession(authOptions);
-
   const resPop = await sendRequest<IBackendRes<ITrack[]>>({
     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/top?limit=6`,
     method: "POST",
     body: { genre: "POP" }
   })
 
-
   const resElec = await sendRequest<IBackendRes<ITrack[]>>({
     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/top?limit=6`,
     method: "POST",
     body: { genre: "Electronic" }
+  })
+
+  const resBallad = await sendRequest<IBackendRes<ITrack[]>>({
+    url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/top?limit=6`,
+    method: "POST",
+    body: { genre: "Ballad" }
   })
 
   return (
@@ -35,6 +37,10 @@ export default async function HomePage() {
         tracks={resElec?.data ?? []}
         title="Top Electronic Tracks"
       />
+      {(resBallad?.data?.length ?? 0 > 4) ? <MainSlider
+        tracks={resBallad?.data ?? []}
+        title="Top Ballad Tracks"
+      /> : <></>}
     </Container>
   );
 }
