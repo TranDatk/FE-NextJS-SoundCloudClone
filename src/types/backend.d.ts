@@ -14,13 +14,6 @@ declare global {
         _id: string;
     }
 
-
-    interface backendResponse {
-        access: string;
-        refresh: string;
-        user: IUser;
-    }
-
     interface ITrack extends Itembase {
         genre: IGenre;
         user: IUser;
@@ -75,6 +68,11 @@ declare global {
         data?: T;
     }
 
+    interface IUserBackend {
+        access_token: string;
+        refresh_token: string;
+        user: IUser;
+    }
 
     interface IModelPaginate<T> {
         meta: {

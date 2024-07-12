@@ -6,24 +6,27 @@ import { sendRequest } from "@/utils/api"
 import CredentialsProvider from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt"
 import dayjs from "dayjs"
+import { IUser } from "@/types/next-auth"
 
 
 async function refreshAccessToken(token: JWT) {
 
   const resFetch = await fetch('http://localhost:8005/api/v1/auth/refresh', {
     method: 'POST',
-    // headers: {
-    //   'Content-Type': 'application/x-www-form-urlencoded',
-    // },
-    // body: ,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      refresh_token: token?.refresh_token
+    }),
   });
 
   const res = await resFetch.json();
   if (!res.error) {
     return {
       ...token,
-      access_token: res?.access_token ?? "",
-      refresh_token: res?.refresh_token ?? "",
+      access_token: res?.data?.access_token ?? "",
+      refresh_token: res?.data?.refresh_token ?? "",
       access_expire: dayjs(new Date()).add(
         +(process.env.TOKEN_EXPIRE_NUMBER as string), (process.env.TOKEN_EXPIRE_UNIT as any)
       ).unix(),
@@ -61,7 +64,6 @@ export const authOptions: AuthOptions = {
           body: bodyObject.toString(),
         });
         let res = await response.json();
-        delete res.data.user.permissions;
         if (!res.error) {
           return res.data as any
         } else {
@@ -81,18 +83,22 @@ export const authOptions: AuthOptions = {
   callbacks: {
     async jwt({ token, user, account, profile, trigger }) {
       if (trigger === "signIn" && account?.provider === "github") {
-        const res = await sendRequest<backendResponse>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/github/`,
+        const resToBackEnd = await sendRequest<IBackendRes<IUserBackend>>({
+          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/github`,
           method: "POST",
-          body: { access_token: account?.access_token }
+          body: {
+            email: user?.email,
+            image: user?.image,
+            name: user?.name
+          }
         })
-        if (res) {
-          token.user = res.user;
-          token.access_token = res.access;
-          token.refresh_token = res.refresh;
-          //   token.access_expire = dayjs(new Date()).add(
-          //     +(process.env.TOKEN_EXPIRE_NUMBER as string), (process.env.TOKEN_EXPIRE_UNIT as any)
-          // ).unix();
+        if (resToBackEnd?.data?.user) {
+          token.user = resToBackEnd?.data?.user;
+          token.access_token = resToBackEnd?.data?.access_token;
+          token.refresh_token = resToBackEnd?.data?.refresh_token;
+          token.access_expire = dayjs(new Date()).add(
+            +(process.env.TOKEN_EXPIRE_NUMBER as string), (process.env.TOKEN_EXPIRE_UNIT as any)
+          ).unix();
         }
       } else if (trigger === "signIn" && account?.provider === "credentials") {
         //@ts-ignore
@@ -114,11 +120,11 @@ export const authOptions: AuthOptions = {
         })
         if (res) {
           token.user = res.user;
-          token.access_token = res.access;
-          token.refresh_token = res.refresh;
-          //   token.access_expire = dayjs(new Date()).add(
-          //     +(process.env.TOKEN_EXPIRE_NUMBER as string), (process.env.TOKEN_EXPIRE_UNIT as any)
-          // ).unix();
+          token.access_token = res?.access_token;
+          token.refresh_token = res?.refresh_token;
+          token.access_expire = dayjs(new Date()).add(
+            +(process.env.TOKEN_EXPIRE_NUMBER as string), (process.env.TOKEN_EXPIRE_UNIT as any)
+          ).unix();
         }
       }
       const isTimeAfter = dayjs(dayjs(new Date())).isAfter(dayjs.unix((token?.access_expire as number ?? 0)));

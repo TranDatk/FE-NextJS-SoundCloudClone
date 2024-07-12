@@ -100,17 +100,29 @@ const CommentTrack = (props: IProps) => {
                         return (
                             <Box key={comment._id} sx={{ display: "flex", gap: "10px", justifyContent: "space-between" }}>
                                 <Box sx={{ display: "flex", gap: "10px", marginBottom: "25px", alignItems: "center" }}>
-                                    <img
-                                        style={{
-                                            height: 40, width: 40, borderRadius: "50%"
+                                    {
+                                        comment?.user?.type === 'CREDENTIAL' ? <img
+                                            style={{
+                                                height: 40, width: 40, borderRadius: "50%"
 
-                                        }}
-                                        src={comment?.user?.avatar !== "" && comment?.user?.avatar !== null && comment?.user?.avatar !== undefined ?
-                                            `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${comment?.user?.avatar}` :
-                                            "/avatars-000184820148-9xr49w-t240x240.jpg"}
-                                    />
+                                            }}
+                                            src={comment?.user?.avatar !== "" && comment?.user?.avatar !== null && comment?.user?.avatar !== undefined ?
+                                                `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${comment?.user?.avatar}` :
+                                                "/avatars-000184820148-9xr49w-t240x240.jpg"}
+                                        />
+                                            :
+                                            <img
+                                                style={{
+                                                    height: 40, width: 40, borderRadius: "50%"
+
+                                                }}
+                                                src={comment?.user?.avatar !== "" && comment?.user?.avatar !== null && comment?.user?.avatar !== undefined ?
+                                                    `${comment?.user?.avatar}` :
+                                                    "/avatars-000184820148-9xr49w-t240x240.jpg"}
+                                            />
+                                    }
                                     <div>
-                                        <div style={{ fontSize: "13px" }}>{comment?.user?.username ?? comment?.user?.email} at
+                                        <div style={{ fontSize: "13px" }}>{comment?.user?.name ?? comment?.user?.email} at
                                             <span style={{ cursor: "pointer" }}
                                                 onClick={() => handleJumpTrack(comment.moment)}
                                             >

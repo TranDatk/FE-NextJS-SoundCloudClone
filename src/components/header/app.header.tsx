@@ -132,7 +132,8 @@ export default function AppHeader() {
             <MenuItem onClick={
                 () => {
                     handleMenuClose();
-                    signOut({ callbackUrl: '/', redirect: true })
+                    signOut({ callbackUrl: '/', redirect: true });
+                    router.refresh()
                 }
             }>Log out</MenuItem>
         </Menu>
@@ -243,12 +244,20 @@ export default function AppHeader() {
                                         <ActiveLink href={"/playlist"}>PlayLists</ActiveLink>
                                         <ActiveLink href={"/likes"}>Likes</ActiveLink>
                                         <ActiveLink href={"/track/upload"}>Upload</ActiveLink>
-                                        <img
+                                        {session?.user?.type === 'CREDENTIAL' ? <img
                                             src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
                                                 `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${session?.user?.avatar}` :
                                                 "/avatars-000184820148-9xr49w-t240x240.jpg"}
                                             onClick={handleProfileMenuOpen}
                                             style={{ width: 40, height: 40, borderRadius: "50%" }} />
+                                            :
+                                            <img
+                                                src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
+                                                    `${session?.user?.avatar}` :
+                                                    "/avatars-000184820148-9xr49w-t240x240.jpg"}
+                                                onClick={handleProfileMenuOpen}
+                                                style={{ width: 40, height: 40, borderRadius: "50%" }} />
+                                        }
                                     </> :
                                     <Link href={"/auth/signin"}>Login</Link>
                             }
