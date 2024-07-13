@@ -124,7 +124,12 @@ export const authOptions: AuthOptions = {
           }
         })
         if (resToBackEnd?.data?.user) {
-          token.user = resToBackEnd?.data?.user;
+          const newUser = {
+            ...resToBackEnd?.data?.user,
+            avatar: user?.image ?? resToBackEnd?.data?.user?.avatar,
+            name: user?.name ?? resToBackEnd?.data?.user?.name
+          }
+          token.user = newUser;
           token.access_token = resToBackEnd?.data?.access_token;
           token.refresh_token = resToBackEnd?.data?.refresh_token;
           token.access_expire = dayjs(new Date()).add(
