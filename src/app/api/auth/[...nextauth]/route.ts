@@ -84,12 +84,13 @@ export const authOptions: AuthOptions = {
     async jwt({ token, user, account, profile, trigger }) {
       if (trigger === "signIn" && account?.provider === "github") {
         const resToBackEnd = await sendRequest<IBackendRes<IUserBackend>>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/github`,
+          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/social-media`,
           method: "POST",
           body: {
             email: user?.email,
             image: user?.image,
-            name: user?.name
+            name: user?.name,
+            type: 'GITHUB'
           }
         })
         if (resToBackEnd?.data?.user) {
@@ -112,16 +113,20 @@ export const authOptions: AuthOptions = {
         ).unix();
       }
       else if (trigger === "signIn" && account?.provider === "google") {
-        //@ts-ignore
-        const res = await sendRequest<backendResponse>({
-          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}/google/`,
+        const resToBackEnd = await sendRequest<IBackendRes<IUserBackend>>({
+          url: `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/social-media`,
           method: "POST",
-          body: { access_token: account?.access_token }
+          body: {
+            email: user?.email,
+            image: user?.image,
+            name: user?.name,
+            type: 'GOOGLE'
+          }
         })
-        if (res) {
-          token.user = res.user;
-          token.access_token = res?.access_token;
-          token.refresh_token = res?.refresh_token;
+        if (resToBackEnd?.data?.user) {
+          token.user = resToBackEnd?.data?.user;
+          token.access_token = resToBackEnd?.data?.access_token;
+          token.refresh_token = resToBackEnd?.data?.refresh_token;
           token.access_expire = dayjs(new Date()).add(
             +(process.env.TOKEN_EXPIRE_NUMBER as string), (process.env.TOKEN_EXPIRE_UNIT as any)
           ).unix();
