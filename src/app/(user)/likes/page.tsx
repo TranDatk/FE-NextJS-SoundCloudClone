@@ -52,9 +52,7 @@ const LikePage = async () => {
                                 <Link
                                     style={{ textDecoration: "none", color: "unset" }}
                                     href={
-                                        `/track/${convertSlugUrl(like?.track?.title)}
-                                        -
-                                        ${like?.track?._id}.html`}
+                                        `/track/${convertSlugUrl(like?.track?.title)}-${like?.track?._id}.html`}
                                 >
                                     <span
                                         style={{

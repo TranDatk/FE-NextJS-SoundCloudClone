@@ -5,13 +5,38 @@ import Divider from '@mui/material/Divider';
 import { Box } from "@mui/material";
 import WaveTrack from "@/components/track/wave.track";
 import { notFound } from "next/navigation";
-import { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import type { Metadata, ResolvingMetadata } from 'next'
 
-export const metadata: Metadata = {
-    title: 'Nghe nhạc với Sound cloud',
-    description: 'Mô tả',
+type Props = {
+    params: { slug: string }
+    searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export async function generateMetadata(
+    { params, searchParams }: Props,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    // read route params
+    const id = getIdFromUrl(params.slug);
+
+    const res = await sendRequest<IBackendRes<ITrack>>({
+        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/${id}/`,
+        method: "GET",
+        nextOption: { next: { tags: ['track-by-id'] } }
+    })
+
+    return {
+        title: res?.data?.title,
+        description: res?.data?.description,
+        openGraph: {
+            title: res?.data?.title,
+            description: res?.data?.description,
+            type: 'website',
+            images: [`${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${res?.data?.photo}`],
+        },
+    }
 }
 
 const DetailTrackPage = async ({ params }: { params: { slug: string } }) => {

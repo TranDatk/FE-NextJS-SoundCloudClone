@@ -11,7 +11,7 @@ import { IUser } from "@/types/next-auth"
 
 async function refreshAccessToken(token: JWT) {
 
-  const resFetch = await fetch('http://localhost:8005/api/v1/auth/refresh', {
+  const resFetch = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}auth/refresh`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
