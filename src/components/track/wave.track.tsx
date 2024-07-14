@@ -15,6 +15,7 @@ import LikeTrack from "./like.track";
 import { useSession } from "next-auth/react";
 import { sendRequest } from "@/utils/api";
 import { useRouter } from "next/navigation";
+import Image from 'next/image'
 
 interface IProps {
     id: string;
@@ -340,27 +341,33 @@ const WaveTrack = (props: IProps) => {
                     </div>
                     <div className="right"
                         style={{
-                            width: "25%",
+                            marginTop: '2%',
+                            width: "27%",
+                            height: "80%",
                             padding: 15,
                             display: "flex",
-                            alignItems: "center"
+                            justifyContent: "center",
+                            alignItems: "center",
+                            position: 'relative'
                         }}
                     >
-                        {
-                            track?.photo ? (<img
+                        {track?.photo ? (
+                            <Image
                                 src={`${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${track?.photo}`}
-                                width={230}
-                                height={230}
+                                fill
                                 alt={"track"}
+                                style={{ objectFit: 'cover' }} // Điều chỉnh hình ảnh cho phù hợp
                             />
-                            ) : <div style={{
+                        ) : (
+                            <div style={{
                                 background: "#ccc",
                                 width: 250,
                                 height: 250
                             }}>
                             </div>
-                        }
+                        )}
                     </div>
+
                 </div>
                 <LikeTrack track={track} isFollow={props?.isFollow} />
                 <CommentTrack comments={comments} track={track} wavesurfer={wavesurfer} />

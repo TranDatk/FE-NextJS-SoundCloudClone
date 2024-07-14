@@ -39,6 +39,20 @@ export async function generateMetadata(
     }
 }
 
+export async function generateStaticParams() {
+    return [
+        { slug: 'nam-doi-ban-tay-kay-tran-66850079c52d5614696bd9ba.html' },
+        { slug: 'cham-khe-tim-anh-mot-chut-thoi-6684189971843975cf6b45df.html' },
+        { slug: 'chiec-khan-gio-am-tien-cookie-6684fe9ac52d5614696bd9ab.html' },
+        { slug: 'khi-nguoi-minh-yeu-khoc-phan-manh-quynh-6685026ec52d5614696bd9c9.html' },
+        { slug: 'cham-lan-moi-em-andree-hoang-ton-tinle-66850447c52d5614696bd9d8.html' },
+        { slug: 'happy-ending-erik-66850559c52d5614696bd9e7.html' },
+        { slug: 'kill-eva-encassator-psycho-dreams-668d5b24fec3c90e0cce16e0.html' },
+        { slug: 'floki-evse-voruyu-668d5c48fec3c90e0cce172c.html' },
+        { slug: 'brodyaga-funk-668e4c2df538984a22937ef6.html' },
+    ]
+}
+
 const DetailTrackPage = async ({ params }: { params: { slug: string } }) => {
     const session = await getServerSession(authOptions);
     const id = getIdFromUrl(params.slug);
