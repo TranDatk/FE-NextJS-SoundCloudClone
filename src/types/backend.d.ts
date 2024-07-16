@@ -25,6 +25,11 @@ declare global {
         view: number;
     }
 
+    interface IVerify {
+        isVerify: boolean;
+        message: string;
+    }
+
     interface IComment extends Itembase {
         commentText: string;
         moment: number;

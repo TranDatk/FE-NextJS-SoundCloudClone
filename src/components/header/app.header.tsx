@@ -280,27 +280,31 @@ export default function AppHeader() {
                         }}>
                             {
                                 session ?
-                                    <>
-                                        <ActiveLink href={"/playlist"}>PlayLists</ActiveLink>
-                                        <ActiveLink href={"/likes"}>Likes</ActiveLink>
-                                        <ActiveLink href={"/track/upload"}>Upload</ActiveLink>
-                                        {session?.user?.type === 'CREDENTIAL' ? <img
-                                            src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
-                                                `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${session?.user?.avatar}` :
-                                                "/avatars-000184820148-9xr49w-t240x240.jpg"}
-                                            onClick={handleProfileMenuOpen}
-                                            style={{ width: 40, height: 40, borderRadius: "50%" }} />
-                                            :
-                                            <img
-                                                src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
-                                                    `${session?.user?.avatar}` :
-                                                    "/avatars-000184820148-9xr49w-t240x240.jpg"}
-                                                onClick={handleProfileMenuOpen}
-                                                style={{ width: 40, height: 40, borderRadius: "50%" }} />
-                                        }
-                                        {currentUser?.isPrenium && <Tooltip title={'You are premium'} arrow>
-                                            <DiamondIcon sx={{ color: 'yellow' }} />
-                                        </Tooltip>}
+                                    <>{
+                                        (session?.user?.type !== 'CREDENTIAL' || currentUser?.isVerify) && (
+                                            <>
+                                                <ActiveLink href={"/playlist"}>PlayLists</ActiveLink>
+                                                <ActiveLink href={"/likes"}>Likes</ActiveLink>
+                                                <ActiveLink href={"/track/upload"}>Upload</ActiveLink>
+                                                {session?.user?.type === 'CREDENTIAL' ? <img
+                                                    src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
+                                                        `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${session?.user?.avatar}` :
+                                                        "/avatars-000184820148-9xr49w-t240x240.jpg"}
+                                                    onClick={handleProfileMenuOpen}
+                                                    style={{ width: 40, height: 40, borderRadius: "50%" }} />
+                                                    :
+                                                    <img
+                                                        src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
+                                                            `${session?.user?.avatar}` :
+                                                            "/avatars-000184820148-9xr49w-t240x240.jpg"}
+                                                        onClick={handleProfileMenuOpen}
+                                                        style={{ width: 40, height: 40, borderRadius: "50%" }} />
+                                                }
+                                                {currentUser?.isPrenium && <Tooltip title={'You are premium'} arrow>
+                                                    <DiamondIcon sx={{ color: 'yellow' }} />
+                                                </Tooltip>}
+                                            </>)
+                                    }
                                     </>
                                     :
                                     <Link href={"/auth/signin"}>Login</Link>

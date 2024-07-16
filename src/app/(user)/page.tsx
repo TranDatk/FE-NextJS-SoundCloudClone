@@ -5,28 +5,30 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Divider from '@mui/material/Divider';
 import HeadBanner from "@/components/banner/head.banner";
+import VerifyComponent from "@/components/verify/check.verify.component";
 
 export default async function HomePage() {
   const resPop = await sendRequest<IBackendRes<ITrack[]>>({
     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/top?limit=6`,
     method: "POST",
     body: { genre: "POP" }
-  })
+  });
 
   const resElec = await sendRequest<IBackendRes<ITrack[]>>({
     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/top?limit=6`,
     method: "POST",
     body: { genre: "Electronic" }
-  })
+  });
 
   const resBallad = await sendRequest<IBackendRes<ITrack[]>>({
     url: `${process.env.NEXT_PUBLIC_BACKEND_URL}tracks/top?limit=6`,
     method: "POST",
     body: { genre: "Ballad" }
-  })
+  });
 
   return (
     <Container>
+      <VerifyComponent />
       <HeadBanner />
       <MainSlider
         tracks={resPop?.data ?? []}

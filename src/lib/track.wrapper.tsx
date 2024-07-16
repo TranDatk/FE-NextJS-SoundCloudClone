@@ -8,7 +8,7 @@ export const TrackContextProvider = ({ children }: { children: React.ReactNode }
     const initValue = {
         _id: '',
         genre: { _id: '', name: "", description: "" },
-        user: { _id: '', username: "", password: "", email: "", first_name: "", last_name: "", avatar: "", pk: 0, name: "", permissions: null, type: '' },
+        user: { _id: '', username: "", password: "", email: "", first_name: "", last_name: "", avatar: "", pk: 0, name: "", permissions: null, type: '', isVerify: false },
         description: "",
         photo: "",
         title: "",

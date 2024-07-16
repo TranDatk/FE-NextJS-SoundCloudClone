@@ -18,6 +18,7 @@ export const UserContextProvider = ({ children }: { children: React.ReactNode })
         permissions: null,
         type: '',
         isPrenium: false,
+        isVerify: false
     }
     const [currentUser, setCurrentUser] = useState<IShareUser>(initValue);
 

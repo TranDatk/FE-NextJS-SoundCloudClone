@@ -15,8 +15,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { IUser } from "@/types/next-auth";
 import { sendRequest } from "@/utils/api";
+import { useUserContext } from "@/lib/user.wrapper";
 
-const AuthSignIn = (props: any) => {
+
+
+const AuthSignIn = () => {
     const router = useRouter();
 
     const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -39,6 +42,17 @@ const AuthSignIn = (props: any) => {
     const [resSuccessMessage, setResSuccessMessage] = useState<string>("");
 
     const [isRegister, setIsRegister] = useState<boolean>(false);
+    const [isVerify, setIsVerify] = useState<boolean>(false);
+    const { currentUser, setCurrentUser } = useUserContext() as IUserContext;
+
+    const handleVerify = async () => {
+        const resVerify = await sendRequest<IBackendRes<IVerify>>({
+            url: `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/verify`,
+            method: "POST",
+            body: { email: `${username}` }
+        });
+        setIsVerify(resVerify?.data?.isVerify ?? false);
+    }
 
     const handleSubmit = async () => {
         setIsErrorUsername(false);
@@ -63,7 +77,13 @@ const AuthSignIn = (props: any) => {
             redirect: false
         })
         if (!res?.error) {
-            router.push("/")
+            handleVerify()
+            if (isVerify) {
+                router.push("/");
+            } else {
+                setCurrentUser({ ...currentUser, isVerify: false })
+                router.push(`/verify?email=${username}`);
+            }
         } else {
             setOpenMessage(true);
             setResMessage("Mật khẩu hoặc tài khoản không chính xác");
@@ -110,6 +130,9 @@ const AuthSignIn = (props: any) => {
             setIsRegister(false);
             setOpenSuccessMessage(true);
             setResSuccessMessage("Account successfully created");
+            setUsername(username);
+            setPassword(password);
+            handleSubmit();
         } else {
             setOpenMessage(true);
             setResMessage("Mật khẩu hoặc tài khoản không chính xác");

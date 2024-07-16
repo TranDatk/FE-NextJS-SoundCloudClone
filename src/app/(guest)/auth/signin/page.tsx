@@ -8,6 +8,7 @@ const SignInPage = async () => {
     if (session !== null && !session?.error && session?.user) {
         redirect("/")
     }
+
     return (
         <AuthSignIn />
     )
