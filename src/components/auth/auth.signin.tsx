@@ -135,7 +135,7 @@ const AuthSignIn = () => {
             handleSubmit();
         } else {
             setOpenMessage(true);
-            setResMessage("Mật khẩu hoặc tài khoản không chính xác");
+            setResMessage('Đăng ký thất bại');
         }
     }
 
