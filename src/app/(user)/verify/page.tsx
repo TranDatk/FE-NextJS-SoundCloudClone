@@ -1,5 +1,4 @@
-import VerifyCodeComponent from "@/app/(user)/verification/verify.component";
-
+import VerifyCodeComponent from "@/components/verification/verify.component";
 
 const VerifyPage = async () => {
     return (
