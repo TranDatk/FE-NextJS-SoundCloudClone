@@ -74,6 +74,12 @@ declare global {
         user: IUser;
     }
 
+    interface IPayment {
+        status: string;
+        orderCode: string;
+        user: IUser;
+    }
+
     interface IModelPaginate<T> {
         meta: {
             current: number;

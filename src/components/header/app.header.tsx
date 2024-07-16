@@ -23,6 +23,8 @@ import { redirect, useRouter } from 'next/navigation';
 import { useSession, signIn, signOut } from "next-auth/react"
 import ActiveLink from './active.link';
 import { useEffect } from 'react';
+import { Tooltip } from '@mui/material';
+import DiamondIcon from '@mui/icons-material/Diamond';
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -258,7 +260,11 @@ export default function AppHeader() {
                                                 onClick={handleProfileMenuOpen}
                                                 style={{ width: 40, height: 40, borderRadius: "50%" }} />
                                         }
-                                    </> :
+                                        {session?.user?.isPrenium && <Tooltip title={'You are premium'} arrow>
+                                            <DiamondIcon sx={{ color: 'yellow' }} />
+                                        </Tooltip>}
+                                    </>
+                                    :
                                     <Link href={"/auth/signin"}>Login</Link>
                             }
 
