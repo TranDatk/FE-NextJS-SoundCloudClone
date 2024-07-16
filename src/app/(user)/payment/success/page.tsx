@@ -1,5 +1,5 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import SuccessComponent from '@/components/success/success.component';
+import SuccessComponent from '@/components/payment/success.component';
 import { sendRequest } from '@/utils/api';
 import { getServerSession } from 'next-auth';
 

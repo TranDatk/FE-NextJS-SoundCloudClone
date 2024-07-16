@@ -1,5 +1,5 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import CancelComponent from '@/components/success/cancel.component';
+import CancelComponent from '@/components/payment/cancel.component';
 import { sendRequest } from '@/utils/api';
 import { getServerSession } from 'next-auth';
 
