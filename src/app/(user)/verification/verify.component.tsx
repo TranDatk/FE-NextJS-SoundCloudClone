@@ -17,6 +17,10 @@ const VerifyCodeComponent = () => {
     const [resendTimer, setResendTimer] = useState(0);
     const toast = useToast();
 
+    if (!session?.user) {
+        router.push('/');
+    }
+
     useEffect(() => {
         inputRefs.current[0]?.current?.focus();
     }, []);
