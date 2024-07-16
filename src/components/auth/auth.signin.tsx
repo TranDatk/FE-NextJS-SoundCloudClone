@@ -126,7 +126,7 @@ const AuthSignIn = () => {
                 rePassword: rePassword
             }
         });
-        if (!res?.error) {
+        if (res?.data) {
             setIsRegister(false);
             setOpenSuccessMessage(true);
             setResSuccessMessage("Account successfully created");
