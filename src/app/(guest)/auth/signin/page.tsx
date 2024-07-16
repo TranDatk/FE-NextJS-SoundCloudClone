@@ -4,7 +4,7 @@ import { getServerSession } from "next-auth/next";
 import { redirect } from "next/navigation"
 
 const SignInPage = async () => {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
     if (session !== null && !session?.error && session?.user) {
         redirect("/")
     }

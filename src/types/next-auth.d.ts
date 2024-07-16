@@ -10,7 +10,6 @@ interface IUser {
     pk: number;
     name: string;
     type: string;
-    isPrenium: boolean;
 }
 
 declare module "next-auth/jwt" {

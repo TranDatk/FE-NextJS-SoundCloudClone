@@ -6,6 +6,7 @@ import NextAuthWrapper from '@/lib/next.auth.wrapper';
 import NProgressWrapper from '@/lib/nprgress.wrapper';
 import { ToastProvider } from '@/utils/toast';
 import '@/app/styles/globals.scss'
+import { UserContextProvider } from '@/lib/user.wrapper';
 
 const DRAWER_WIDTH = 240;
 
@@ -20,7 +21,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <NextAuthWrapper>
               <ToastProvider>
                 <TrackContextProvider>
-                  {children}
+                  <UserContextProvider>
+                    {children}
+                  </UserContextProvider>
                 </TrackContextProvider>
               </ToastProvider>
             </NextAuthWrapper>

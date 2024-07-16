@@ -138,15 +138,6 @@ export const authOptions: AuthOptions = {
           ).unix();
         }
       };
-      const resPayment = await sendRequest<IBackendRes<IPayment>>({
-        url: `${process.env.NEXT_PUBLIC_BACKEND_URL}payment/check/-1`,
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token?.access_token}`,
-        },
-      });
-
-      token.isPrenium = resPayment?.data?.status === 'PAID' ? true : false;
 
       const isTimeAfter = dayjs(dayjs(new Date())).isAfter(dayjs.unix((token?.access_expire as number ?? 0)));
       if (isTimeAfter) {
@@ -159,7 +150,7 @@ export const authOptions: AuthOptions = {
       if (token) {
         session.access_token = token.access_token;
         session.refresh_token = token.refresh_token;
-        session.user = { ...token.user, isPrenium: token?.isPrenium as boolean };
+        session.user = token.user;
         session.error = token.error;
       }
       return session;

@@ -80,6 +80,31 @@ declare global {
         user: IUser;
     }
 
+
+    interface ICreatePaymentResponse {
+        bin: string;
+        checkoutUrl: string;
+        accountNumber: string;
+        accountName: string;
+        amount: number;
+        description: string;
+        orderCode: number;
+        qrCode: string;
+    }
+
+    interface ICancelPaymentResponse {
+        id: string;
+        orderCode: number;
+        amount: number;
+        amountPaid: number;
+        amountRemaining: number;
+        status: string;
+        createdAt: Date;
+        transactions: string[];
+        canceledAt: Date;
+        cancellationReason: string;
+    }
+
     interface IModelPaginate<T> {
         meta: {
             current: number;
@@ -97,5 +122,15 @@ declare global {
     interface ITrackContext {
         currentTrack: IShareTrack;
         setCurrentTrack: (track: IShareTrack) => void;
+    }
+
+
+    interface IShareUser extends IUser {
+        isPrenium: boolean;
+    }
+
+    interface IUserContext {
+        currentUser: IShareUser;
+        setCurrentUser: (user: IShareUser) => void;
     }
 }

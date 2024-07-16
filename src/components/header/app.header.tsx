@@ -22,9 +22,11 @@ import Link from 'next/link'
 import { redirect, useRouter } from 'next/navigation';
 import { useSession, signIn, signOut } from "next-auth/react"
 import ActiveLink from './active.link';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Tooltip } from '@mui/material';
 import DiamondIcon from '@mui/icons-material/Diamond';
+import { sendRequest } from '@/utils/api';
+import { useUserContext } from "@/lib/user.wrapper";
 
 
 const Search = styled('div')(({ theme }) => ({
@@ -68,12 +70,39 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 export default function AppHeader() {
-    const { data: session } = useSession()
+    const { data: session } = useSession();
     const router = useRouter();
+    const { currentUser, setCurrentUser } = useUserContext() as IUserContext;
 
     if (session?.error === "RefreshAccessTokenError") {
         router.push("/auth/signin")
     }
+
+    const fetchData = async () => {
+        if (session?.access_token) {
+            const resPayment = await sendRequest<IBackendRes<IPayment>>({
+                url: `${process.env.NEXT_PUBLIC_BACKEND_URL}payment/check/-1`,
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${session?.access_token}`,
+                },
+                nextOption: {
+                    next: { tags: ['payment'] }
+                }
+            });
+
+            if (resPayment?.data) {
+                setCurrentUser({
+                    ...currentUser,
+                    isPrenium: resPayment?.data?.status === 'PAID' ? true : false
+                })
+            }
+        }
+    }
+
+    useEffect(() => {
+        fetchData();
+    }, [session])
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -129,6 +158,15 @@ export default function AppHeader() {
                         textDecoration: "unset"
                     }}>
                     Profile
+                </Link>
+            </MenuItem>
+            <MenuItem>
+                <Link href={`/payment`}
+                    style={{
+                        color: "unset",
+                        textDecoration: "unset"
+                    }}>
+                    Upgrade
                 </Link>
             </MenuItem>
             <MenuItem onClick={
@@ -260,7 +298,7 @@ export default function AppHeader() {
                                                 onClick={handleProfileMenuOpen}
                                                 style={{ width: 40, height: 40, borderRadius: "50%" }} />
                                         }
-                                        {session?.user?.isPrenium && <Tooltip title={'You are premium'} arrow>
+                                        {currentUser?.isPrenium && <Tooltip title={'You are premium'} arrow>
                                             <DiamondIcon sx={{ color: 'yellow' }} />
                                         </Tooltip>}
                                     </>
