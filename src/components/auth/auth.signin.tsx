@@ -42,8 +42,8 @@ const AuthSignIn = () => {
     const [resSuccessMessage, setResSuccessMessage] = useState<string>("");
 
     const [isRegister, setIsRegister] = useState<boolean>(false);
-    const [isVerify, setIsVerify] = useState<boolean>(false);
     const { currentUser, setCurrentUser } = useUserContext() as IUserContext;
+
 
     const handleVerify = async () => {
         const resVerify = await sendRequest<IBackendRes<IVerify>>({
@@ -51,8 +51,8 @@ const AuthSignIn = () => {
             method: "POST",
             body: { email: `${username}` }
         });
-        setIsVerify(resVerify?.data?.isVerify ?? false);
-    }
+        return resVerify?.data?.isVerify ?? false;
+    };
 
     const handleSubmit = async () => {
         setIsErrorUsername(false);
@@ -75,13 +75,14 @@ const AuthSignIn = () => {
             username: username,
             password: password,
             redirect: false
-        })
+        });
         if (!res?.error) {
-            handleVerify()
-            if (isVerify) {
+            const verified = await handleVerify();
+            if (verified) {
                 router.push("/");
+                setCurrentUser({ ...currentUser, isVerify: true });
             } else {
-                setCurrentUser({ ...currentUser, isVerify: false })
+                setCurrentUser({ ...currentUser, isVerify: false });
                 router.push(`/verify?email=${username}`);
             }
         } else {
@@ -194,6 +195,7 @@ const AuthSignIn = () => {
                                         setIsErrorUsername(true);
                                         setErrorUsername('Please enter a valid email');
                                     } else {
+                                        setErrorUsername('');
                                         setIsErrorUsername(false);
                                     }
                                 }

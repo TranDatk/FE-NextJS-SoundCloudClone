@@ -343,20 +343,20 @@ const WaveTrack = (props: IProps) => {
                         style={{
                             marginTop: '2%',
                             width: "27%",
-                            height: "80%",
+                            height: "85%",
                             padding: 15,
                             display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                            position: 'relative'
                         }}
                     >
                         {track?.photo ? (
-                            <Image
+                            <img
                                 src={`${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${track?.photo}`}
-                                fill
                                 alt={"track"}
-                                style={{ objectFit: 'cover' }} // Điều chỉnh hình ảnh cho phù hợp
+                                style={{
+                                    width: '100%',
+                                    height: '100%',
+                                    borderRadius: '10%'
+                                }}
                             />
                         ) : (
                             <div style={{
@@ -367,7 +367,6 @@ const WaveTrack = (props: IProps) => {
                             </div>
                         )}
                     </div>
-
                 </div>
                 <LikeTrack track={track} isFollow={props?.isFollow} />
                 <CommentTrack comments={comments} track={track} wavesurfer={wavesurfer} />

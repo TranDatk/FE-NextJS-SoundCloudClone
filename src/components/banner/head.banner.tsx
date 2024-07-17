@@ -16,9 +16,12 @@ const HeadBanner = () => {
             />
             <div className="overlay">
                 <h2>Kết nối trên SoundCloud</h2>
-                <p>Khám phá, phát trực tuyến và chia sẻ danh sách kết hợp âm nhạc
-                    không ngừng mở rộng từ các nghệ sĩ mới nổi và lớn trên khắp thế giới</p>
-                <Button className="btn" variant="contained">Đăng ký miễn phí</Button>
+                <p>Khám phá, phát trực tuyến và chia sẻ danh sách kết hợp âm nhạc không ngừng mở rộng từ các nghệ sĩ mới nổi và lớn trên khắp thế giới</p>
+                <Button
+                    sx={{ display: { md: 'flex', xs: 'none' }, justifyContent: 'center', marginLeft: 'auto', marginRight: 'auto', background: '#f50' }}
+                    className="btn" variant="contained">
+                    Đăng ký miễn phí
+                </Button>
             </div>
         </Container>
     )

@@ -6,6 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Divider from '@mui/material/Divider';
 import HeadBanner from "@/components/banner/head.banner";
 import VerifyComponent from "@/components/verify/check.verify.component";
+import PreniumModal from "@/components/main/prenium.modal";
 
 export default async function HomePage() {
   const resPop = await sendRequest<IBackendRes<ITrack[]>>({
@@ -29,6 +30,7 @@ export default async function HomePage() {
   return (
     <Container>
       <VerifyComponent />
+      <PreniumModal />
       <HeadBanner />
       <MainSlider
         tracks={resPop?.data ?? []}
