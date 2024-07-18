@@ -346,7 +346,7 @@ const WaveTrack = (props: IProps) => {
                     <Box className="right" sx={{ display: { xs: 'none', md: 'flex' } }}
                         style={{
                             marginTop: '2%',
-                            width: 250,
+                            width: 270,
                             height: 250,
                             padding: 15,
                         }}
@@ -357,7 +357,7 @@ const WaveTrack = (props: IProps) => {
                                 alt={"track"}
                                 style={{
                                     minWidth: '100%',
-                                    width: 250,
+                                    width: 260,
                                     height: 250,
                                     borderRadius: '10%'
                                 }}
