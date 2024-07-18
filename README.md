@@ -21,6 +21,8 @@ You can visit the website here: [https://fe-next-js-sound-cloud-clone.vercel.app
 
 1. **User Authentication and Account Management**:
    - Login, register, and email account confirmation using a code sent to the user's email (powered by NextAuth.js).
+     ![image](https://github.com/user-attachments/assets/d38f8a3b-2293-4575-bd4b-165cf52441a7)
+
 
 2. **Track Management**:
    - Listen to tracks.
