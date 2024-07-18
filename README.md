@@ -51,8 +51,8 @@ You can visit the website here: [https://fe-next-js-sound-cloud-clone.vercel.app
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-repo/sound-cloud-clone-fe.git
-   cd sound-cloud-clone-fe
+   git clone https://github.com/TranDatk/FE-NextJS-SoundCloudClone.git
+   cd FE-NextJS-SoundCloudClone
    npm install
 
 2. Set up environment variables:
