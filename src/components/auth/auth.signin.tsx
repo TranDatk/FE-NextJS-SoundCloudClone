@@ -44,7 +44,6 @@ const AuthSignIn = () => {
     const [isRegister, setIsRegister] = useState<boolean>(false);
     const { currentUser, setCurrentUser } = useUserContext() as IUserContext;
 
-
     const handleVerify = async () => {
         const resVerify = await sendRequest<IBackendRes<IVerify>>({
             url: `${process.env.NEXT_PUBLIC_BACKEND_URL}auth/verify`,
