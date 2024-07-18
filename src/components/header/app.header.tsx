@@ -211,7 +211,7 @@ export default function AppHeader() {
                                 session
                                     ?
                                     <>{
-                                        (session?.user?.type !== 'CREDENTIAL' || currentUser?.isVerify) && (
+                                        (session?.user?.isVerify || session?.user?.type !== 'CREDENTIAL' || currentUser?.isVerify) && (
                                             <>
                                                 <ActiveLink href={"/playlist"}>PlayLists</ActiveLink>
                                                 <ActiveLink href={"/likes"}>Likes</ActiveLink>

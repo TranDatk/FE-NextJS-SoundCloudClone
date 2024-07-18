@@ -20,7 +20,7 @@ import ActiveLink from './active.link';
 import { useUserContext } from '@/lib/user.wrapper';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link'
-import { Menu, MenuItem, Typography } from '@mui/material';
+import { ListItemText, Menu, MenuItem, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { signOut } from "next-auth/react"
 import DiamondIcon from '@mui/icons-material/Diamond';
@@ -104,99 +104,104 @@ export default function PersistentDrawerLeft() {
             {
                 session ? (
                     <Box sx={{ display: { xs: 'flex', sm: 'none' } }}>
-                        <Toolbar sx={{ display: `${open ? 'none' : ''}` }}>
-                            <IconButton
-                                color="inherit"
-                                aria-label="open drawer"
-                                onClick={handleDrawerOpen}
-                                edge="start"
-                                sx={{ ml: 'auto', ...(open && { display: 'none' }) }}
-                            >
-                                <MenuIcon />
-                            </IconButton>
-                        </Toolbar>
-                        <Drawer
-                            sx={{
-                                width: open ? drawerWidth : 0,
-                                flexShrink: 0,
-                                '& .MuiDrawer-paper': {
-                                    width: drawerWidth,
-                                    boxSizing: 'border-box',
-                                },
-                            }}
-                            variant="persistent"
-                            anchor="right"
-                            open={open}
-                        >
-                            <DrawerHeader sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <IconButton onClick={handleDrawerClose}>
-                                    {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                                </IconButton>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: ' 10px' }}>
-                                    <Typography>Hello {session?.user?.name ?? ''}</Typography>
-                                    {session?.user?.type === 'CREDENTIAL' ?
-                                        <img
-                                            src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
-                                                `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${session?.user?.avatar}` :
-                                                "/avatars-000184820148-9xr49w-t240x240.jpg"}
-                                            onClick={handleProfileMenuOpen}
-                                            style={{ width: 40, height: 40, borderRadius: "50%" }} />
-                                        :
-                                        <img
-                                            src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
-                                                `${session?.user?.avatar}` :
-                                                "/avatars-000184820148-9xr49w-t240x240.jpg"}
-                                            onClick={handleProfileMenuOpen}
-                                            style={{ width: 40, height: 40, borderRadius: "50%" }} />
-                                    }
-                                </Box>
-                            </DrawerHeader>
-                            <Divider />
-                            <List sx={{
-                                alignItems: "center",
-                                cursor: "pointer",
-                                "a": {
-                                    color: "unset",
-                                    textDecoration: "unset",
-                                    padding: "5px",
+                        {
+                            (session?.user?.isVerify || session?.user?.type !== 'CREDENTIAL' || currentUser?.isVerify) && (
+                                <>
+                                    <Toolbar sx={{ display: `${open ? 'none' : ''}` }}>
+                                        <IconButton
+                                            color="inherit"
+                                            aria-label="open drawer"
+                                            onClick={handleDrawerOpen}
+                                            edge="start"
+                                            sx={{ ml: 'auto', ...(open && { display: 'none' }) }}
+                                        >
+                                            <MenuIcon />
+                                        </IconButton>
+                                    </Toolbar>
+                                    <Drawer
+                                        sx={{
+                                            width: open ? drawerWidth : 0,
+                                            flexShrink: 0,
+                                            '& .MuiDrawer-paper': {
+                                                width: drawerWidth,
+                                                boxSizing: 'border-box',
+                                            },
+                                        }}
+                                        variant="persistent"
+                                        anchor="right"
+                                        open={open}
+                                    >
+                                        <DrawerHeader sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <IconButton onClick={handleDrawerClose}>
+                                                {theme.direction === 'rtl' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                                            </IconButton>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: ' 10px' }}>
+                                                <Typography>Hello {session?.user?.name ?? ''}</Typography>
+                                                {session?.user?.type === 'CREDENTIAL' ?
+                                                    <img
+                                                        src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
+                                                            `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${session?.user?.avatar}` :
+                                                            "/avatars-000184820148-9xr49w-t240x240.jpg"}
+                                                        onClick={handleProfileMenuOpen}
+                                                        style={{ width: 40, height: 40, borderRadius: "50%" }} />
+                                                    :
+                                                    <img
+                                                        src={session?.user?.avatar !== "" && session?.user?.avatar !== null && session?.user?.avatar !== undefined ?
+                                                            `${session?.user?.avatar}` :
+                                                            "/avatars-000184820148-9xr49w-t240x240.jpg"}
+                                                        onClick={handleProfileMenuOpen}
+                                                        style={{ width: 40, height: 40, borderRadius: "50%" }} />
+                                                }
+                                            </Box>
+                                        </DrawerHeader>
+                                        <Divider />
+                                        <List sx={{
+                                            alignItems: "center",
+                                            "a": {
+                                                color: "unset",
+                                                textDecoration: "unset",
+                                                padding: "5px",
 
-                                    "&.active": { color: "orange" }
-                                }
-                            }}>
-                                <ListItem key={'playlist'} disablePadding>
-                                    <ListItemButton>
-                                        <ListItemIcon>
-                                            <QueueMusicIcon />
-                                        </ListItemIcon>
-                                        <ActiveLink href={"/playlist"}>PlayLists</ActiveLink>
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem key={'likes'} disablePadding>
-                                    <ListItemButton>
-                                        <ListItemIcon>
-                                            <FavoriteBorderIcon />
-                                        </ListItemIcon>
-                                        <ActiveLink href={"/likes"}>Likes</ActiveLink>
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem key={'upload'} disablePadding>
-                                    <ListItemButton>
-                                        <ListItemIcon>
-                                            <BackupIcon />
-                                        </ListItemIcon>
-                                        <ActiveLink href={"/track/upload"}>Upload</ActiveLink>
-                                    </ListItemButton>
-                                </ListItem>
-                                <ListItem key={'upload'} disablePadding>
-                                    <ListItemButton>
-                                        <ListItemIcon>
-                                            <DiamondIcon />
-                                        </ListItemIcon>
-                                        <ActiveLink href={"/payment"}>Prenium</ActiveLink>
-                                    </ListItemButton>
-                                </ListItem>
-                            </List>
-                        </Drawer>
+                                                "&.active": { color: "orange" }
+                                            }
+                                        }}>
+                                            <ListItem key='playlist' disablePadding>
+                                                <ListItemButton>
+                                                    <ListItemIcon>
+                                                        <QueueMusicIcon />
+                                                    </ListItemIcon>
+                                                    <ActiveLink href={"/playlist"}>PlayLists</ActiveLink>
+                                                </ListItemButton>
+                                            </ListItem>
+                                            <ListItem key='likes' disablePadding>
+                                                <ListItemButton>
+                                                    <ListItemIcon>
+                                                        <FavoriteBorderIcon />
+                                                    </ListItemIcon>
+                                                    <ActiveLink href={"/likes"}>Likes</ActiveLink>
+                                                </ListItemButton>
+                                            </ListItem>
+                                            <ListItem key='upload' disablePadding>
+                                                <ListItemButton>
+                                                    <ListItemIcon>
+                                                        <BackupIcon />
+                                                    </ListItemIcon>
+                                                    <ActiveLink href={"/track/upload"}>Upload</ActiveLink>
+                                                </ListItemButton>
+                                            </ListItem>
+                                            <ListItem key='prenium' disablePadding>
+                                                <ListItemButton>
+                                                    <ListItemIcon>
+                                                        <DiamondIcon />
+                                                    </ListItemIcon>
+                                                    <ActiveLink href={"/payment"}>Prenium</ActiveLink>
+                                                </ListItemButton>
+                                            </ListItem>
+                                        </List>
+                                    </Drawer>
+                                </>
+                            )
+                        }
                     </Box>
                 )
                     :

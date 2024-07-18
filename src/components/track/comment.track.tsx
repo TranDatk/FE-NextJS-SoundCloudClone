@@ -64,6 +64,7 @@ const CommentTrack = (props: IProps) => {
             wavesurfer.play();
         }
     }
+
     return (
         <div>
             <div style={{ marginTop: "50px", marginBottom: "25px" }}>
@@ -82,18 +83,23 @@ const CommentTrack = (props: IProps) => {
                     />
                 }
             </div>
-            {/* {`${process.env.NEXT_PUBLIC_BACKEND_URL}${track?.user.avatar}`} */}
             <div style={{ display: "flex", gap: "10px" }}>
-                <div className='left' style={{ width: "190px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                <div className='left'
+                    style={{
+                        width: 'auto',
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center"
+                    }}>
                     <img
                         style={{
-                            height: 150, width: 150, borderRadius: "50%"
+                            height: '10vw', width: '10vw', borderRadius: "50%"
                         }}
                         src={track?.user?.avatar !== "" && track?.user?.avatar !== null && track?.user?.avatar !== undefined ?
                             `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${track?.user?.avatar}` :
                             "/avatars-000184820148-9xr49w-t240x240.jpg"}
                     />
-                    <h3>{track?.user?.name}</h3>
+                    <h3 style={{ fontSize: '1.5vw' }}>{track?.user?.name}</h3>
                 </div>
                 <div className='right' style={{ width: "calc(100% - 200px)" }}>
                     {comments?.map(comment => {

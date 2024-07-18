@@ -8,7 +8,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import './wave.scss'
 import { calLeft } from "@/utils/utils";
-import { Tooltip } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import { useTrackContext } from "@/lib/track.wrapper";
 import CommentTrack from "./comment.track";
 import LikeTrack from "./like.track";
@@ -42,7 +42,8 @@ const WaveTrack = (props: IProps) => {
     const { currentTrack, setCurrentTrack } = useTrackContext() as ITrackContext;
     const [isPlaying, setIsPlaying] = useState<boolean>(false);
     const { data: session } = useSession();
-    const [firstTimeOnPage, setFirstTimeOnPage] = useState<boolean>(true)
+    const [firstTimeOnPage, setFirstTimeOnPage] = useState<boolean>(true);
+    const [durationTrack, setDurationTrack] = useState<number>(0);
 
     const options: Omit<WaveSurferOptions, 'container'> & { container: RefObject<HTMLElement>; } = useMemo(() => {
         if (typeof document === 'undefined') {
@@ -171,11 +172,13 @@ const WaveTrack = (props: IProps) => {
         }
     }, [wavesurfer]);
 
+
     if (typeof document !== 'undefined') {
-        const timeEl = timeRef.current!
-        const durationEl = durationRef.current!
+        const timeEl = timeRef.current!;
+        const durationEl = durationRef.current!;
         wavesurfer && wavesurfer.on('decode', (duration) => (durationEl.textContent = formatTime(duration)))
         wavesurfer && wavesurfer.on('timeupdate', (currentTime) => (timeEl.textContent = formatTime(currentTime)))
+        wavesurfer && wavesurfer.on('decode', (duration) => (setDurationTrack(duration)))
     }
 
     useEffect(() => {
@@ -227,7 +230,7 @@ const WaveTrack = (props: IProps) => {
                 >
                     <div className="left"
                         style={{
-                            width: "75%",
+                            width: "100%",
                             height: "calc(100% - 10px)",
                             display: "flex",
                             flexDirection: "column",
@@ -300,26 +303,27 @@ const WaveTrack = (props: IProps) => {
                                         return (
                                             <Tooltip key={`id=${comment._id}`} title={comment?.commentText} arrow>
                                                 {
-                                                    comment?.user?.type === 'CREDENTIAL' ? <img
-                                                        className={`${isReady && 'img-comments'}`}
-                                                        onPointerMove={(e) => {
-                                                            const hover = hoverRef.current;
-                                                            hover ? hover.style.width = calLeft(comment?.moment + 3) : null;
-                                                        }}
-                                                        key={`id_img=${comment._id}`}
-                                                        src={comment?.user?.avatar !== '' && comment?.user?.avatar !== null ?
-                                                            `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${comment?.user?.avatar}` :
-                                                            "avatars-000184820148-9xr49w-t240x240.jpg"}
-                                                        alt="sa"
-                                                        style={{
-                                                            left: calLeft(comment.moment)
-                                                        }} />
+                                                    comment?.user?.type === 'CREDENTIAL' ?
+                                                        <img
+                                                            className={`${isReady && 'img-comments'}`}
+                                                            onPointerMove={(e) => {
+                                                                const hover = hoverRef.current;
+                                                                hover ? hover.style.width = calLeft(comment?.moment, durationTrack) : null;
+                                                            }}
+                                                            key={`id_img=${comment._id}`}
+                                                            src={comment?.user?.avatar !== '' && comment?.user?.avatar !== null ?
+                                                                `${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${comment?.user?.avatar}` :
+                                                                "avatars-000184820148-9xr49w-t240x240.jpg"}
+                                                            alt="sa"
+                                                            style={{
+                                                                left: calLeft(comment.moment, durationTrack)
+                                                            }} />
                                                         :
                                                         <img
                                                             className={`${isReady && 'img-comments'}`}
                                                             onPointerMove={(e) => {
                                                                 const hover = hoverRef.current;
-                                                                hover ? hover.style.width = calLeft(comment?.moment + 3) : null;
+                                                                hover ? hover.style.width = calLeft(comment?.moment, durationTrack) : null;
                                                             }}
                                                             key={`id_img=${comment._id}`}
                                                             src={comment?.user?.avatar !== '' && comment?.user?.avatar !== null ?
@@ -327,7 +331,7 @@ const WaveTrack = (props: IProps) => {
                                                                 "avatars-000184820148-9xr49w-t240x240.jpg"}
                                                             alt="sa"
                                                             style={{
-                                                                left: calLeft(comment.moment)
+                                                                left: calLeft(comment.moment, durationTrack)
                                                             }} />
                                                 }
                                             </Tooltip>
@@ -339,13 +343,12 @@ const WaveTrack = (props: IProps) => {
                             <div className={`${isReady && 'overlay-wave'}`}></div>
                         </div>
                     </div>
-                    <div className="right"
+                    <Box className="right" sx={{ display: { xs: 'none', md: 'flex' } }}
                         style={{
                             marginTop: '2%',
-                            width: "27%",
-                            height: "85%",
+                            width: 250,
+                            height: 250,
                             padding: 15,
-                            display: "flex",
                         }}
                     >
                         {track?.photo ? (
@@ -353,8 +356,9 @@ const WaveTrack = (props: IProps) => {
                                 src={`${process.env.NEXT_PUBLIC_BACKEND_PUBLIC}${track?.photo}`}
                                 alt={"track"}
                                 style={{
-                                    width: '100%',
-                                    height: '100%',
+                                    minWidth: '100%',
+                                    width: 250,
+                                    height: 250,
                                     borderRadius: '10%'
                                 }}
                             />
@@ -366,7 +370,7 @@ const WaveTrack = (props: IProps) => {
                             }}>
                             </div>
                         )}
-                    </div>
+                    </Box>
                 </div>
                 <LikeTrack track={track} isFollow={props?.isFollow} />
                 <CommentTrack comments={comments} track={track} wavesurfer={wavesurfer} />

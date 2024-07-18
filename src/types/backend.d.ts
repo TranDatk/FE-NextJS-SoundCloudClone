@@ -132,6 +132,7 @@ declare global {
 
     interface IShareUser extends IUser {
         isPrenium: boolean;
+        haveUserAccessed: boolean;
     }
 
     interface IUserContext {

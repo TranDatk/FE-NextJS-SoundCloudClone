@@ -1,13 +1,15 @@
 'use client'
 
-import { Fade, Modal, Button } from "@mui/material";
+import { Fade, Modal, Button, Box } from "@mui/material";
 import { useState, useEffect } from "react";
 import CloseIcon from '@mui/icons-material/Close';
 import { useRouter } from "next/navigation";
+import { useUserContext } from "@/lib/user.wrapper";
 
 const PremiumModal = () => {
     const [open, setOpen] = useState(false);
     const router = useRouter();
+    const { currentUser, setCurrentUser } = useUserContext() as IUserContext;
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -19,58 +21,59 @@ const PremiumModal = () => {
 
     const handleClose = () => {
         setOpen(false);
+        setCurrentUser({ ...currentUser, haveUserAccessed: true });
     };
 
     return (
-        <Modal
-            open={open}
-            onClose={handleClose}
-            closeAfterTransition
-        >
-            <Fade in={open} timeout={500}>
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    height: '100%',
-                    position: 'relative',
-                }}>
-                    <img
-                        src='/modal.png'
-                        alt="Modal Content"
-                        style={{ maxHeight: "70%", maxWidth: "70%" }}
-                    />
-                    <Button
-                        variant="contained"
-                        sx={{
-                            background: '#00FFFF',
-                            width: '150px',
-                            position: 'absolute',
-                            bottom: 'calc((100% - 73%))',
-                            left: 'calc((100% - 10%) / 2)'
-                        }}
-                        onClick={() => { router.push('/payment') }}
-                    >
-                        Nâng cấp tài khoản ngay!!!
-                    </Button>
-                    <Button
-                        variant="contained"
-                        color="error"
-                        sx={{
-                            position: 'absolute',
-                            top: 'calc((100% - 85%))',
-                            right: 'calc((100% - 33%) / 2)',
-                            background: 'white',
-                            color: 'black'
-                        }}
-                        onClick={handleClose}
-                    >
-                        <CloseIcon />
-                    </Button>
-                </div>
-            </Fade>
-        </Modal>
+        <>
+            {!currentUser?.haveUserAccessed &&
+                < Modal
+                    open={open}
+                    onClose={handleClose}
+                    closeAfterTransition
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }
+                    }
+                >
+                    <Fade in={open} timeout={500}>
+                        <Box
+                            sx={{
+                                position: 'relative',
+                                width: { xs: '18rem', sm: '30rem' },
+                                height: { xs: '18rem', sm: '30rem' },
+                            }}
+                        >
+                            <img
+                                src='/modal.png'
+                                alt="Modal Content"
+                                style={{ display: 'block', maxWidth: '100%', maxHeight: '100%', cursor: 'pointer' }}
+                                onClick={() => { router.push('/payment') }}
+                            />
+                            <Button
+                                variant="text"
+                                color="error"
+                                sx={{
+                                    position: 'absolute',
+                                    top: '10px',
+                                    right: '8px',
+                                    color: 'white',
+                                    width: { xs: '1vw', sm: '25px' },
+                                    height: { xs: '1rem', sm: '2rem' },
+                                }}
+                                onClick={handleClose}
+                            >
+                                <CloseIcon sx={{ fontSize: '2rem' }} />
+                            </Button>
+                        </Box>
+                    </Fade>
+                </ Modal>
+            }
+        </>
     );
+
 };
 
 export default PremiumModal;
